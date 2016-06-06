@@ -19,7 +19,6 @@ describe("Directory scanner", () => {
     it("returns a list of length 5", (done) => {
         scanner.getAllFilenames(`${fullsizeDir}`, (err, files) => {
             console.log(files);
-            console.log("in getAllFilenames callback");
             expect(files.length).toBe(5);            
             done();
         });
@@ -27,24 +26,25 @@ describe("Directory scanner", () => {
 });
 
 function setupImgDir(done) {
-    fs.mkdir(`./${fullsizeDir}`, (err, done) => {
+    fs.mkdir(`./${fullsizeDir}`, (err) => {
         if(err) {
             console.error("Error creating test directory", err);
         }
         createFiles(fullsizeDir, done);
-        done();
     });
 }
 
-function createFiles(dir) {
-    async.each([1,2,3,4,5], (item, cb) => {
+function createFiles(dir, done) {
+    async.each([1,2,3,4,5], (item, asyncDone) => {
         fs.writeFile(`./${dir}/file${item}.txt`, 'test', (err) => {
             if (err) throw err;
+            asyncDone();
         });
     }, (err) => {
             if(err) {
                 console.error("Error writing test files");
             }
+            done();
     });
 }
 
