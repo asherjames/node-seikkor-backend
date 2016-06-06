@@ -8,6 +8,11 @@ Same functionality as [seikkor-backend](https://github.com/asherjames/seikkor-ba
 npm install
 ```
 
+###Test
+```
+npm test
+```
+
 ###Run
 ```
 node index.js
