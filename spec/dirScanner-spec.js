@@ -18,11 +18,29 @@ describe("Directory scanner", () => {
 
     it("returns a list of length 5", (done) => {
         scanner.getAllFilenames(`${fullsizeDir}`, (err, files) => {
-            console.log(files);
             expect(files.length).toBe(5);            
             done();
         });
     });
+
+    it("returns a list with the correct filename as the first element", (done) => {
+        scanner.getAllFilenames(`${fullsizeDir}`, (err, files) => {
+            expect(files[0]).toBe("file1.txt");
+            done();
+        });
+    });
+
+    it("returns a list with exactly the correct contents", (done) => {
+        scanner.getAllFilenames(`${fullsizeDir}`, (err, files) => {
+            let correctArr = ['file1.txt', 
+                            'file2.txt', 
+                            'file3.txt', 
+                            'file4.txt', 
+                            'file5.txt'];
+            expect(files).toEqual(correctArr);
+            done();
+        })
+    })
 });
 
 function setupImgDir(done) {
