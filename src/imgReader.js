@@ -1,4 +1,4 @@
-const async = 
+const async = require('async');
 const path = require('path');
 const sizeOf = require('image-size');
 

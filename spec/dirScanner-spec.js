@@ -39,8 +39,8 @@ describe("Directory scanner", () => {
                             'file5.txt'];
             expect(files).toEqual(correctArr);
             done();
-        })
-    })
+        });
+    });
 });
 
 function setupImgDir(done) {

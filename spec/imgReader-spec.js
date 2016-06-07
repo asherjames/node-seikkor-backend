@@ -4,14 +4,19 @@ const jpg = require('random-jpeg');
 
 const reader = require('../src/imgReader');
 
+const fullsizeImagePath = "tempFullsize/image1.jpg";
+const thumbnailImagePath = "tempThumbnail/image1.jpg";
+const fullsizeDir = "tempFullsize";
+const thumbnailDir = "tempThumbnail";
+
 describe("Image info reader", () => {
-    const fullsizePath = "tempFullsize/image1.jpg";
-    const thumbnailPath = "tempThumbnail/image1.jpg";
 
     beforeEach((done) => {
-        async.parallel([
-            (cb) => {setupImages(fullsizePath, 800, 600, cb)},
-            (cb) => {setupImages(thumbnailPath, 200, 150, cb)}
+        async.series([
+            (cb) => {setupImgDir(fullsizeDir, cb)},
+            (cb) => {setupImgDir(thumbnailDir, cb)},
+            (cb) => {setupImages(fullsizeImagePath, 800, 600, cb)},
+            (cb) => {setupImages(thumbnailImagePath, 200, 150, cb)}
         ], (err) => {
             if (err) {
                 console.error("Error setting up test images", err);
@@ -25,12 +30,21 @@ describe("Image info reader", () => {
     });
 
     it("returns image info with correct filename", (done) => {
-        reader.getImageInfo(fullsizePath, thumbnailPath, (imgInfo) => {
+        reader.getImageInfo(fullsizeImagePath, thumbnailImagePath, (imgInfo) => {
             expect(imgInfo.src).toEqual("image1.jpg");
             done();
         })
     });
 });
+
+function setupImgDir(path, done) {
+    fs.mkdir(`./${path}`, (err) => {
+        if(err) {
+            console.error("Error creating test directory", err);
+        }
+        done();
+    });
+}
 
 function setupImages(path, w, h, done) {
     let imageOptions = {
