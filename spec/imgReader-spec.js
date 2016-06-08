@@ -11,7 +11,7 @@ const thumbnailDir = "tempThumbnail";
 
 describe("Image info reader", () => {
 
-    beforeEach((done) => {
+    beforeAll((done) => {
         async.series([
             (cb) => {setupImgDir(fullsizeDir, cb)},
             (cb) => {setupImgDir(thumbnailDir, cb)},
@@ -25,12 +25,22 @@ describe("Image info reader", () => {
         });
     });
 
-    afterEach((done) => {
-        removeImages(done);
+    afterAll((done) => {
+        async.series([
+            (cb) => {removeImage(`./${fullsizeImagePath}`, cb)},
+            (cb) => {removeImage(`./${thumbnailImagePath}`, cb)},
+            (cb) => {removeDir(`./${fullsizeDir}`, cb)},
+            (cb) => {removeDir(`./${thumbnailDir}`, cb)}
+        ], (err) => {
+            if (err) {
+                console.error("Error tearing down test images/directories", err);
+            }
+            done();
+        });
     });
 
     it("returns image info with correct filename", (done) => {
-        reader.getImageInfo(fullsizeImagePath, thumbnailImagePath, (imgInfo) => {
+        reader.getImageInfo(`./${fullsizeImagePath}`, `./${thumbnailImagePath}`, (imgInfo) => {
             expect(imgInfo.src).toEqual("image1.jpg");
             done();
         })
@@ -57,13 +67,27 @@ function setupImages(path, w, h, done) {
         quality: 100
     };
     jpg.writeJPEG(path, imageOptions, (err) => {
-        if (err) {
+        if(err) {
             console.error("Error creating test image", err);
         }
         done();
     });
 }
 
-function removeImages(done) {
+function removeImage(path, done) {
+    fs.unlink(path, (err) => {
+        if(err) {
+            console.error("Error while deleting test image", err);
+        }
+        done();
+    });
+}
 
+function removeDir(path, done) {
+    fs.rmdir(path, (err) => {
+        if(err) {
+            console.error("Error while deleting test directory", err);
+        }
+        done();
+    });
 }

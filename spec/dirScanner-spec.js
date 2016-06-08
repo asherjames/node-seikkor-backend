@@ -7,11 +7,12 @@ const fullsizeDir = "tempFullsize";
 const thumbnailDir = "tempThumbnail";
 
 describe("Directory scanner", () => {
-    beforeEach((done) => {
+    
+    beforeAll((done) => {
         setupImgDir(done);
     });
 
-    afterEach((done) => {
+    afterAll((done) => {
         removeImgDir();
         done();
     });
