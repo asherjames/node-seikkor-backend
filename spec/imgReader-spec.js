@@ -39,11 +39,34 @@ describe("Image info reader", () => {
         });
     });
 
-    it("returns image info with correct filename", (done) => {
+    it("returns image info with correct fullsize filename", (done) => {
         reader.getImageInfo(`./${fullsizeImagePath}`, `./${thumbnailImagePath}`, (imgInfo) => {
             expect(imgInfo.src).toEqual("image1.jpg");
             done();
-        })
+        });
+    });
+
+    it("returns image info with correct thumbnail filename", (done) => {
+        reader.getImageInfo(`./${fullsizeImagePath}`, `./${thumbnailImagePath}`, (imgInfo) => {
+            expect(imgInfo.thumbnail).toEqual("image1.jpg");
+            done();
+        });
+    });
+
+    it("returns image info with correct fullsize width and height", (done) => {
+        reader.getImageInfo(`./${fullsizeImagePath}`, `./${thumbnailImagePath}`, (imgInfo) => {
+            expect(imgInfo.w).toBe(800);
+            expect(imgInfo.h).toBe(600);
+            done();
+        });
+    });
+
+    it("returns image info with correct thumbnail width and height", (done) => {
+        reader.getImageInfo(`./${fullsizeImagePath}`, `./${thumbnailImagePath}`, (imgInfo) => {
+            expect(imgInfo.thumbW).toBe(200);
+            expect(imgInfo.thumbH).toBe(150);
+            done();
+        });
     });
 });
 
