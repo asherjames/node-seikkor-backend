@@ -27,10 +27,10 @@ describe("Image info reader", () => {
 
     afterAll((done) => {
         async.series([
-            (cb) => {removeImage(`./${fullsizeImagePath}`, cb)},
-            (cb) => {removeImage(`./${thumbnailImagePath}`, cb)},
-            (cb) => {removeDir(`./${fullsizeDir}`, cb)},
-            (cb) => {removeDir(`./${thumbnailDir}`, cb)}
+            (cb) => {removeImage(fullsizeImagePath, cb)},
+            (cb) => {removeImage(thumbnailImagePath, cb)},
+            (cb) => {removeDir(fullsizeDir, cb)},
+            (cb) => {removeDir(thumbnailDir, cb)}
         ], (err) => {
             if (err) {
                 console.error("Error tearing down test images/directories", err);
@@ -66,7 +66,7 @@ function setupImages(path, w, h, done) {
         allowSameColorTouch: false,
         quality: 100
     };
-    jpg.writeJPEG(path, imageOptions, (err) => {
+    jpg.writeJPEG(`./${path}`, imageOptions, (err) => {
         if(err) {
             console.error("Error creating test image", err);
         }
@@ -75,7 +75,7 @@ function setupImages(path, w, h, done) {
 }
 
 function removeImage(path, done) {
-    fs.unlink(path, (err) => {
+    fs.unlink(`./${path}`, (err) => {
         if(err) {
             console.error("Error while deleting test image", err);
         }
@@ -84,7 +84,7 @@ function removeImage(path, done) {
 }
 
 function removeDir(path, done) {
-    fs.rmdir(path, (err) => {
+    fs.rmdir(`./${path}`, (err) => {
         if(err) {
             console.error("Error while deleting test directory", err);
         }

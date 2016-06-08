@@ -3,9 +3,9 @@ const path = require('path');
 const sizeOf = require('image-size');
 
 module.exports.getImageInfo = (fullPath, thumbPath, cb) => {
-    async.parallel([
+    async.series([
         (asyncCb) => {
-            getImageSize(thumbPath, asyncCb);           
+            getImageSize(fullPath, asyncCb);           
         },
         (asyncCb) => {
             getImageSize(thumbPath, asyncCb);                       
@@ -30,6 +30,6 @@ function getImageSize(path, asyncCb) {
             console.error("Error reading image information", err);
             return;
         }
-        asyncCb(dim);
+        asyncCb(null, dim);
     });
 }
