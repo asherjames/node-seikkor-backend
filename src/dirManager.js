@@ -6,6 +6,19 @@ const maxSize = require('../conf/config.json').maxThumbnailSize;
 const fullPath = require('../conf/config.json').fullsizeImagePath;
 const thumbPath = require('../conf/config.json').thumbnailImagePath;
 const reader = require('./dirReader');
+const scanner = require('./dirScanner');
+
+module.exports.getImgInfos = (cb) => {
+    let imageInfos = {};
+    async.series([
+            (cb) => {scanner.getAllFilenames(fullPath, cb)},
+            (cb) => {scanner.getAllFilenames(thumbPath, cb)}
+        ], 
+        (err, results) => {
+            compareDirs(results[0], results[1]);
+    });
+    cb(null, imageInfos);
+}
 
 
 function compareDirs(fulls, thumbs) {
