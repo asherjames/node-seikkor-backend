@@ -1,4 +1,5 @@
 {
     "fullsizeImagePath" : "C:\\images\\fullsize",
-    "thumbnailImagePath" : "C:\\images\\thumbnail"
+    "thumbnailImagePath" : "C:\\images\\thumbnail",
+    "maxThumbnailSize" : 400
 }

@@ -13,7 +13,8 @@
     "express": "^4.13.4",
     "image-size": "^0.5.0",
     "lodash": "^4.13.1",
-    "node-thumbnail": "^0.6.6"
+    "node-thumbnail": "^0.6.6",
+    "thumbnail": "^0.1.9"
   },
   "devDependencies": {
     "jasmine": "^2.4.1",

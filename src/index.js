@@ -1,8 +1,11 @@
 const async = require('async');
 const express = require('express');
 const _ = require('lodash');
+const Thumbnail = require('thumbnail');
 
-const config = require('../conf/config.json');
+const fullPath = require('../conf/config.json').fullsizeImagePath;
+const thumbPath = require('../conf/config.json').thumbnailImagePath;
+const maxSize = require('../conf/config.json').maxThumbnailSize;
 const scanner = require('./dirScanner');
 
 const app = express();
@@ -11,11 +14,11 @@ const app = express();
 app.get('/seikkor/photos', (req, res) => {
     let imageInfos = {};
     async.series([
-            (cb) => {scanner.getAllFilenames(config.fullsizeImagePath, cb)},
-            (cb) => {scanner.getAllFilenames(config.thumbnailImagePath, cb)}
+            (cb) => {scanner.getAllFilenames(fullPath, cb)},
+            (cb) => {scanner.getAllFilenames(thumbPath, cb)}
         ], 
         (err, results) => {
-            compareDirs(results[0], results[1])
+            compareDirs(results[0], results[1]);
     });
     res.json(imageInfos);
 });
@@ -30,6 +33,16 @@ function compareDirs(fulls, thumbs) {
     });
 
     if(noThumbs.length) {
-        
+        updateThumbs(noThumbs);
     }
+}
+
+function updateThumbs(noThumbs) {
+    let thumb = new Thumbnail(fullPath, thumbPath);
+
+    if(noThumbs.length) {
+        async.each(noThumbs, (item, done) => {
+            
+        });
+    }    
 }

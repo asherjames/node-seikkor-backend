@@ -24,12 +24,12 @@ module.exports.getImageInfo = (fullPath, thumbPath, cb) => {
     });
 }
 
-function getImageSize(path, asyncCb) {
+module.exports.getImageSize = (path, cb) => {
     sizeOf(path, (err, dim) => {
         if(err) {
             console.error("Error reading image information", err);
             return;
         }
-        asyncCb(null, dim);
+        cb(null, dim);
     });
 }
