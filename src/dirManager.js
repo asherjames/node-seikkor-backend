@@ -45,11 +45,13 @@ function updateThumbs(noThumbs, cb) {
                 }
                 generateThumb(item, dim);
             }) 
+        }, (err) => {
+            cb();
         });
     }    
 }
 
-function generateThumb(img, dim) {
+function generateThumb(img, dim, done) {
     let thumb = new Thumbnail(fullPath, thumbPath);
     let width = null;
     let height = null;
@@ -63,6 +65,7 @@ function generateThumb(img, dim) {
             console.error("Error creating thumbnail", err);
         }
         console.log(`Created thumbnail ${thumbName}`);
+        done();
     });
 }
 
