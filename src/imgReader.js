@@ -2,7 +2,7 @@ const async = require('async');
 const path = require('path');
 const sizeOf = require('image-size');
 
-module.exports.getImageInfo = (fullPath, thumbPath, cb) => {
+module.exports.getImageData = (fullPath, thumbPath, cb) => {
     async.series([
         (asyncCb) => {
             getImageSize(fullPath, asyncCb);           

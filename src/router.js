@@ -1,12 +1,11 @@
 const express = require('express');
+const morgan = require('morgan');
+
 const router = express.Router();
 
 const manager = require('./dirManager');
 
-router.use((req, res, next) => {
-    console.log(`Request received, ${Date.now()}`);
-    next();
-});
+router.use(morgan('tiny'));
 
 router.get('/photos/allphotoinfo', (req, res) => {
     manager.getImgInfos((err, imgInfos) => {

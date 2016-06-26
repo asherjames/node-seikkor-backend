@@ -2,36 +2,41 @@ const async = require('async');
 const _ = require('lodash');
 const Thumbnail = require('thumbnail');
 
-const maxSize = require('../conf/config.json').maxThumbnailSize;
-const fullPath = require('../conf/config.json').fullsizeImagePath;
-const thumbPath = require('../conf/config.json').thumbnailImagePath;
-const reader = require('./dirReader');
+const {maxThumbnailSize: maxSize,
+       fullsizeImagePath: fullPath,
+       thumbnailImagePath: thumbPath} = require('../conf/config.json');
+const reader = require('./imgReader');
 const scanner = require('./dirScanner');
 
-module.exports.getImgInfos = (cb) => {
+module.exports.getImgInfos = (finalCb) => {
     let imageInfos = {};
     async.series([
             (cb) => {scanner.getAllFilenames(fullPath, cb)},
             (cb) => {scanner.getAllFilenames(thumbPath, cb)}
         ], 
         (err, results) => {
-            compareDirs(results[0], results[1]);
+            compareDirs(results[0], results[1], (imageInfos) => {
+                finalCb(null, imageInfos);
+        });
     });
-    cb(null, imageInfos);
 }
 
 
-function compareDirs(fulls, thumbs) {
+function compareDirs(fulls, thumbs, cb) {
     let noThumbs = fulls.filter((item) => {
         return !_.includes(thumbs, item);
     });
-
-    if(noThumbs.length) {
-        updateThumbs(noThumbs);
-    }
+        
+    async.series([
+        (cb) => {updateThumbs(noThumbs, cb)},
+        (cb) => {getData()}
+    ], 
+    (err, results) => {
+        cb(results[0])
+    });
 }
 
-function updateThumbs(noThumbs) {
+function updateThumbs(noThumbs, cb) {
     if(noThumbs.length) {
         async.each(noThumbs, (item, done) => {
             reader.getImageSize(`${fullPath}/${item}`, (err, dim) => {
@@ -58,5 +63,11 @@ function generateThumb(img, dim) {
             console.error("Error creating thumbnail", err);
         }
         console.log(`Created thumbnail ${thumbName}`);
+    });
+}
+
+function getData(imgList, cb) {
+    reader.getImageData(fullPath, thumbPath, (results) => {
+        cb(results);
     });
 }
